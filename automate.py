@@ -35,7 +35,7 @@ def webhook():
 			time.sleep(2)
 			print("Running command: " + RUN_CMD)
 			# go to the LOCAL_GIT_FOLDER_PATH and run the command
-			output = subprocess.check_output("cd "+LOCAL_GIT_FOLDER_PATH+" && "+RUN_CMD, shell=True)
+			output = subprocess.Popen("cd "+LOCAL_GIT_FOLDER_PATH+" && "+RUN_CMD)
 			print("Commands executed")
 			print(output)
 			return jsonify({'message': 'success'}), 200
