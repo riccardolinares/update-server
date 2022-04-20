@@ -5,8 +5,6 @@ import git
 import hmac
 import time
 import subprocess
-import asyncio
-
 
 
 # take environment variables from .env
@@ -28,7 +26,6 @@ def webhook():
 			# Check if the repo exist, otherwise clone it
 			if not os.path.exists(LOCAL_GIT_FOLDER_PATH) or not os.path.exists(LOCAL_GIT_FOLDER_PATH + '.git'):
 				print("Path does not exist, cloning repo")
-				# os.system('cd '+LOCAL_GIT_FOLDER_PATH)
 				git.Git().clone(GIT_REPO_SSH, LOCAL_GIT_FOLDER_PATH)
 			else:
 				print("Path exists, pulling repo")
@@ -37,9 +34,9 @@ def webhook():
 			time.sleep(2)
 			print("Running command: " + RUN_CMD)
 			# go to the LOCAL_GIT_FOLDER_PATH and run the command
-			# output = subprocess.check_output("cd "+LOCAL_GIT_FOLDER_PATH+" && "+RUN_CMD, shell=True)
-			asyncio.run(run("cd "+LOCAL_GIT_FOLDER_PATH+" && "+RUN_CMD))
+			output = subprocess.check_output("cd "+LOCAL_GIT_FOLDER_PATH+" && "+RUN_CMD, shell=True)
 			print("Commands executed")
+			print(output)
 			return jsonify({'message': 'success'}), 200
 		else:
 			print("Signature does not match")
@@ -64,22 +61,6 @@ def verify_signature(request_data, header_signature):
 	# verify the digest matches the signature
 	if hmac.compare_digest(mac.hexdigest(), signature):
 		return True
-
-
-async def run(cmd):
-	proc = await asyncio.create_subprocess_shell(
-		cmd,
-		stdout=asyncio.subprocess.PIPE,
-		stderr=asyncio.subprocess.PIPE)
-
-	stdout, stderr = await proc.communicate()
-
-	print(f'[{cmd!r} exited with {proc.returncode}]')
-	if stdout:
-		print(f'[stdout]\n{stdout.decode()}')
-	if stderr:
-		print(f'[stderr]\n{stderr.decode()}')
-
 
 if __name__ == '__main__':
 	app.run(debug=True, host="0.0.0.0")
