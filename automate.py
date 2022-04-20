@@ -33,7 +33,7 @@ def webhook():
 				git.Git(GIT_REPO_SSH).pull()
 			print("Running command: " + RUN_CMD)
 			# go to the LOCAL_GIT_FOLDER_PATH and run the command
-			output = subprocess.check_output(RUN_CMD, shell=True)
+			output = subprocess.check_output("cd "+LOCAL_GIT_FOLDER_PATH+" && "+RUN_CMD, shell=True)
 			print("Commands executed")
 			print(output)
 			return jsonify({'message': 'success'}), 200
