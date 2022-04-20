@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 import git
 import hmac
+import time
 
 # take environment variables from .env
 load_dotenv()
@@ -24,17 +25,20 @@ def webhook():
 			if not os.path.exists(LOCAL_GIT_FOLDER_PATH) or not os.path.exists(LOCAL_GIT_FOLDER_PATH + '.git'):
 				print("Path does not exist, cloning repo")
 				git.Git().clone(GIT_REPO_SSH, LOCAL_GIT_FOLDER_PATH)
-				os.system('cd '+LOCAL_GIT_FOLDER_PATH)
 			else:
 				print("Path exists, pulling repo")
 				os.system('cd '+LOCAL_GIT_FOLDER_PATH)
 				git.Git(GIT_REPO_SSH).pull()
-			print(os.getcwd())
-			os.system(RUN_CMD)
+			time.sleep(5)
+			print("Running command: " + RUN_CMD)
+			os.system('cd '+LOCAL_GIT_FOLDER_PATH+' & '+RUN_CMD)
+			print("Command executed")
 			return jsonify({'message': 'success'}), 200
 		else:
-			return jsonify({'message': 'failure', 'description': 'Signature not verified'}), 404
+			print("Signature does not match")
+			return jsonify({'message': 'failure', 'description': 'Signature does not match'}), 404
 	except Exception as e:
+		print(e)
 		return jsonify({'message': 'failure', 'description':str(e)}), 404
 
 def verify_signature(request_data, header_signature):
