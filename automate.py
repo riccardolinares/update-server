@@ -37,9 +37,6 @@ def webhook():
 			output = subprocess.check_output("cd "+LOCAL_GIT_FOLDER_PATH+" && "+RUN_CMD, shell=True)
 			print("Commands executed")
 			print(output)
-			# if output has error, return error
-			if "error" or "Traceback" in str(output):
-				return jsonify({'message': 'failure', 'description':str(output)})
 			return jsonify({'message': 'success'}), 200
 		else:
 			print("Signature does not match")
