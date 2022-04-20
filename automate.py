@@ -31,7 +31,6 @@ def webhook():
 				print("Path exists, pulling repo")
 				os.system('cd '+LOCAL_GIT_FOLDER_PATH)
 				git.Git(GIT_REPO_SSH).pull()
-			time.sleep(2)
 			print("Running command: " + RUN_CMD)
 			# go to the LOCAL_GIT_FOLDER_PATH and run the command
 			output = subprocess.check_output("cd "+LOCAL_GIT_FOLDER_PATH+" && "+RUN_CMD, shell=True)
