@@ -47,12 +47,13 @@ def verify_signature(request_data, header_signature):
 	if sha_name != 'sha1':
 		return False
 
+	print(signature)
 	# create a new hmac with the secret key and the request data
 	mac = hmac.new(secret_key.encode(), msg=request_data, digestmod='sha1')
-
+	print(mac)
 	# verify the digest matches the signature
-	if not hmac.compare_digest(mac.hexdigest(), signature):
-		return False
+	if hmac.compare_digest(mac.hexdigest(), signature):
+		return True
 
 if __name__ == '__main__':
 	app.run(debug=True, host="0.0.0.0")
