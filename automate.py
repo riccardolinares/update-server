@@ -24,11 +24,12 @@ def webhook():
 			if not os.path.exists(LOCAL_GIT_FOLDER_PATH) or not os.path.exists(LOCAL_GIT_FOLDER_PATH + '.git'):
 				print("Path does not exist, cloning repo")
 				git.Git().clone(GIT_REPO_SSH, LOCAL_GIT_FOLDER_PATH)
+				os.system('cd '+LOCAL_GIT_FOLDER_PATH)
 			else:
 				print("Path exists, pulling repo")
 				os.system('cd '+LOCAL_GIT_FOLDER_PATH)
 				git.Git(GIT_REPO_SSH).pull()
-
+			print(os.getcwd())
 			os.system(RUN_CMD)
 			return jsonify({'message': 'success'}), 200
 		else:
@@ -47,10 +48,8 @@ def verify_signature(request_data, header_signature):
 	if sha_name != 'sha1':
 		return False
 
-	print(signature)
 	# create a new hmac with the secret key and the request data
 	mac = hmac.new(secret_key.encode(), msg=request_data, digestmod='sha1')
-	print(mac)
 	# verify the digest matches the signature
 	if hmac.compare_digest(mac.hexdigest(), signature):
 		return True
