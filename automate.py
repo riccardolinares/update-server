@@ -28,8 +28,8 @@ def webhook():
 			# Check if the repo exist, otherwise clone it
 			if not os.path.exists(LOCAL_GIT_FOLDER_PATH) or not os.path.exists(LOCAL_GIT_FOLDER_PATH + '.git'):
 				print("Path does not exist, cloning repo")
-				os.system('cd '+LOCAL_GIT_FOLDER_PATH)
-				git.Git().clone(GIT_REPO_SSH)
+				# os.system('cd '+LOCAL_GIT_FOLDER_PATH)
+				git.Git().clone(GIT_REPO_SSH, LOCAL_GIT_FOLDER_PATH)
 			else:
 				print("Path exists, pulling repo")
 				os.system('cd '+LOCAL_GIT_FOLDER_PATH)
